@@ -159,3 +159,77 @@ body, html {
         transform: translateY(0);
     }
 }
+
+.vote-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px; 
+    position: absolute; 
+    left: 50%;
+    transform: translate(-50%, 140%);
+}
+
+.vote-button {
+    cursor: pointer;
+    color: #c5c6c7;
+    transition: color 0.3s ease;
+}
+
+.vote-button.selected {
+    color: #45a29e; 
+}
+
+.vote-button.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.bot-message {
+    width: fit-content; 
+    max-width: 60%; 
+    background-color: #1f2833;
+    border: 1px solid #45a29e;
+    text-align: left;
+    margin-right: auto;
+    padding: 15px; 
+    padding-bottom: 35px; 
+    border-radius: 10px;
+    position: relative; 
+}
+
+.suggestion-box {
+    display: none; 
+    background: rgba(31, 40, 51, 0.9); 
+    color: #66fcf1; 
+    border-radius: 5px;
+    border: 1px solid #45a29e;
+    padding: 10px;
+    max-height: 200px; 
+    overflow-y: auto; 
+    z-index: 1000;
+    top: -220px; 
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+
+.suggestion-item {
+    padding: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.suggestion-item:hover {
+    background: #45a29e;
+    color: #0b0c10;
+}
+
+.hint-box {
+    display: none; 
+    color: #c5c6c7;
+    background: transparent;
+    margin-left: 5px;
+    margin-right: 10px;
+    font-style: italic;
+}

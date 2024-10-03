@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs'); 
 const app = express();
-const port = 3000; 
+const port = 5000;
 
 app.use(cors());
-
 app.use(express.json());
 
 app.post('/question', (req, res) => {
@@ -12,16 +12,34 @@ app.post('/question', (req, res) => {
 
     console.log(`Received question: ${userQuestion}`);
 
-    // simulate 3s
+    // simulate 3s processing time
     setTimeout(() => {
         res.json({
             code: 200,
             data: {
-                answer: `Mời độc giả đón đọc tin tức thời sự về chính trị, kinh tế, đời sống, xã hội, pháp luật, thể thao, văn hoá, giải trí... Xem truyền hình trực tuyến, TV Online các kênh VTV trên Internet.Mời độc giả đón đọc tin tức thời sự về chính trị, kinh tế, đời sống, xã hội, pháp luật, thể thao, văn hoá, giải trí... Xem truyền hình trực tuyến, TV Online các kênh VTV trên Internet.Mời độc giả đón đọc tin tức thời sự về chính trị, kinh tế, đời sống, xã hội, pháp luật, thể thao, văn hoá, giải trí... Xem truyền hình trực tuyến, TV Online các kênh VTV trên Internet.Mời độc giả đón đọc tin tức thời sự về chính trị, kinh tế, đời sống, xã hội, pháp luật, thể thao, văn hoá, giải trí... Xem truyền hình trực tuyến, TV Online các kênh VTV trên Internet.Mời độc giả đón đọc tin tức thời sự về chính trị, kinh tế, đời sống, xã hội, pháp luật, thể thao, văn hoá, giải trí... Xem truyền hình trực tuyến, TV Online các kênh VTV trên Internet.`
+                answer: `hehe`
             }
         });
-    }, 3000); 
+    }, 3000);
 });
+
+// Endpoint /voting
+app.post('/voting', (req, res) => {
+    const vote = req.body.vote;
+
+    if (vote === undefined || (vote !== 1 && vote !== 0)) {
+        res.status(400).json({
+            code: 400,
+            msg: 'Invalid vote value. Vote should be 1 (like) or 0 (dislike).'
+        });
+    } else {
+        console.log(`Received vote: ${vote}`);
+        res.json({
+            code: 200
+        });
+    }
+});
+
 
 app.listen(port, 'localhost', () => {
     console.log(`Server running at http://localhost:${port}/`);
