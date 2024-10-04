@@ -1,6 +1,6 @@
 //CONFIG
-const QUESTION_END_POINT = "http://localhost:5000/question";  
-const VOTING_END_POINT = "http://localhost:5000/voting";  
+const QUESTION_END_POINT = "http://127.0.0.1:8000/question";  
+const VOTING_END_POINT = "http://127.0.0.1:8000/voting";  
 const RECOMMENDATION_QUESTIONS_FILE = "Sample_Eval_QaA.json";  
 
 
@@ -35,6 +35,7 @@ function adjustInputHeight() {
     inputBox.style.height = (inputBox.scrollHeight) + 'px';
 }
 
+const allQaA = [];
 function sendMessage() {
     hideSuggestions();
     hideHint();
@@ -61,13 +62,13 @@ function sendMessage() {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
     typingIndicator.classList.add('show');
-
+    const userQuestion = inputBox.value.trim();
     fetch(QUESTION_END_POINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: inputBox.value.trim() })
+        body: JSON.stringify({ question:  userQuestion})
     })
     .then(response => response.json())
     .then(data => {
@@ -85,6 +86,10 @@ function sendMessage() {
             const botMessage = document.createElement('div');
             botMessage.className = 'message bot-message';
             botMessage.innerText = data.data.answer;
+            allQaA.push({
+                question: userQuestion,
+                answer: data.data.answer
+            })
 
             botMessageContainer.appendChild(botAvatar);
             botMessageContainer.appendChild(botMessage);
@@ -95,12 +100,12 @@ function sendMessage() {
             const likeButton = document.createElement('span');
             likeButton.className = 'vote-button';
             likeButton.innerHTML = '👍';
-            likeButton.onclick = () => voteFeedback(1, likeButton, dislikeButton);
+            likeButton.onclick = () => voteFeedback(1, likeButton, dislikeButton, allQaA[allQaA.length - 1]);
 
             const dislikeButton = document.createElement('span');
             dislikeButton.className = 'vote-button';
             dislikeButton.innerHTML = '👎';
-            dislikeButton.onclick = () => voteFeedback(0, dislikeButton, likeButton);
+            dislikeButton.onclick = () => voteFeedback(0, dislikeButton, likeButton, allQaA[allQaA.length - 1]);
 
             voteContainer.appendChild(likeButton);
             voteContainer.appendChild(dislikeButton);
@@ -128,13 +133,13 @@ function sendMessage() {
     inputBox.value = '';
 }
 
-function voteFeedback(voteValue, selectedButton, otherButton) {
+function voteFeedback(voteValue, selectedButton, otherButton, currentQaA) {
     fetch(VOTING_END_POINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ vote: voteValue })
+        body: JSON.stringify({ vote: voteValue, QaA: currentQaA })
     })
     .then(response => response.json())
     .then(data => {
